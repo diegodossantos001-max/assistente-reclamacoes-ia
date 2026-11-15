@@ -112,8 +112,9 @@ with aba_classificar:
 with aba_painel:
     st.markdown(f"**{len(base)} reclamações reais** (base pública Olist, notas 1 e 2), classificadas pela versão 4.")
     f1, f2 = st.columns(2)
-    temas = f1.multiselect("Tema", sorted(base["tema"].unique()))
-    urgencias = f2.multiselect("Urgência", ["alta", "media", "baixa"], format_func=lambda v: ROTULOS[v])
+    temas = f1.multiselect("Tema", sorted(base["tema"].unique()), placeholder="Todos os temas")
+    urgencias = f2.multiselect("Urgência", ["alta", "media", "baixa"], format_func=lambda v: ROTULOS[v],
+                               placeholder="Todas as urgências")
     dados = base
     if temas:
         dados = dados[dados["tema"].isin(temas)]
@@ -136,7 +137,7 @@ with aba_painel:
         grafico = (
             alt.Chart(contagem)
             .mark_bar(color=AZUL, cornerRadiusEnd=4)
-            .encode(x=alt.X("Reclamações:Q"), y=alt.Y("Tema:N", sort="-x", title=None),
+            .encode(x=alt.X("Reclamações:Q"), y=alt.Y("Tema:N", sort="-x", title=None, axis=alt.Axis(labelLimit=260)),
                     tooltip=["Tema", "Reclamações"])
             .properties(title="Reclamações por tema", height=300)
         )
