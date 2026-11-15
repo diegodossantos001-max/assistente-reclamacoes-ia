@@ -3,3 +3,4 @@ olist_order_reviews_dataset*.csv
 .ipynb_checkpoints/
 
 .streamlit/secrets.toml
+__pycache__/
