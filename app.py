@@ -93,8 +93,8 @@ with aba_classificar:
     if r:
         st.divider()
         fila = prioridade(r["urgencia"], r["risco_perder_cliente"])
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Tema", r["tema"])
+        st.markdown(f"#### {r['tema']}")
+        c2, c3, c4 = st.columns(3)
         c2.metric("Urgência", ROTULOS[r["urgencia"]])
         c3.metric("Risco de perder o cliente", ROTULOS[r["risco_perder_cliente"]])
         c4.metric("Fila", fila)

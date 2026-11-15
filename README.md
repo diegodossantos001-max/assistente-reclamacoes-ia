@@ -2,6 +2,17 @@
 
 Classificação automática de reclamações de clientes com IA generativa: **tema, urgência, risco de perder o cliente, ação sugerida e rascunho de resposta**, com a qualidade medida contra uma classificação humana.
 
+## Experimente
+
+**[assistente-reclamacoes-ia.streamlit.app](https://assistente-reclamacoes-ia.streamlit.app/)**
+
+- **Painel** (aberto a todos): as 200 reclamações classificadas, com filtros, matriz de prioridade, fila de atendimento e o rascunho de resposta de cada caso.
+- **Classificação ao vivo:** cole uma reclamação e receba tema, urgência, risco, justificativa, próximo passo e rascunho de resposta. Como usa a API da OpenAI, é liberada por código de acesso e limitada por sessão, para controlar o custo.
+
+![Classificação ao vivo no app](app_classificacao.png)
+
+![Painel do app](app_painel.png)
+
 ## O problema
 
 Empresas de e-commerce e delivery recebem milhares de reclamações por dia. O time de atendimento precisa saber **o que tratar primeiro**, **quais problemas mais geram insatisfação** e **como responder bem e rápido**. Ler tudo à mão não escala, e uma fila em ordem de chegada trata igual o cliente que só reclamou da cor e o que pagou e não recebeu.
@@ -82,7 +93,6 @@ O modelo maior custa 8 vezes mais e não melhorou o resultado neste problema. A 
 
 ## Próximas evoluções
 
-- **Página em Streamlit:** o atendente cola uma reclamação e recebe a classificação e o rascunho de resposta.
 - **Cruzamento com as outras tabelas da Olist em SQL** (pedidos, produtos, vendedores e prazos), para saber quais vendedores, categorias e regiões geram mais reclamações.
 - **Escala:** API em lote (Batch) e saída estruturada com esquema.
 - **Avaliação das respostas sugeridas**, com critérios como empatia e não prometer prazos.
@@ -113,6 +123,7 @@ Avaliações Olist (99 mil) → filtro: nota 1 ou 2 com comentário (10 mil)
 | `validacao_preenchido.csv` | Classificação humana das 20 reclamações de validação |
 | `teste_preenchido.csv` | Classificação humana das 30 reclamações do teste final |
 | `comparacao_modelos.csv` | Acerto, custo e tempo de cada combinação no teste |
+| `app.py`, `classificador.py`, `prompt_v4.py` | Página web em Streamlit (painel e classificação ao vivo) |
 | `graficos.py` | Gera os gráficos deste README |
 
 ## Como rodar
@@ -124,7 +135,7 @@ Avaliações Olist (99 mil) → filtro: nota 1 ou 2 com comentário (10 mil)
 
 ## Tecnologias
 
-Python · Pandas · OpenAI API · engenharia de prompt · avaliação de modelos · Matplotlib · Google Colab
+Python · Pandas · OpenAI API · engenharia de prompt · avaliação de modelos · Streamlit · Matplotlib · Google Colab
 
 ## Dados
 
