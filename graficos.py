@@ -18,8 +18,9 @@ for y, v in enumerate(t.values):
     ax.text(v + 1, y, f"{v}  ({v/n:.0%})", va="center", color=TXT, fontsize=10)
 ax.set_xlim(0, t.max() * 1.22); ax.set_xticks([]); ax.spines["bottom"].set_visible(False)
 ax.tick_params(axis="y", length=0, colors=TXT)
-fig.suptitle("Entrega e separação de pedidos somam 71% das reclamações", x=0.02, ha="left", fontsize=14, fontweight="semibold", color=TXT)
-ax.set_title(f"Reclamações por tema · amostra de {n} avaliações com nota 1 ou 2 (Olist)", loc="left", color=MUT, fontsize=10, pad=10)
+log = d["tema"].isin(["Produto não entregue", "Produto errado ou incompleto", "Atraso na entrega"]).mean()
+fig.suptitle(f"Entrega e separação de pedidos somam {log:.0%} das reclamações", x=0.02, ha="left", fontsize=14, fontweight="semibold", color=TXT)
+ax.set_title(f"Reclamações por tema · {n} avaliações com nota 1 ou 2 (Olist), classificadas pela versão 4", loc="left", color=MUT, fontsize=10, pad=10)
 fig.tight_layout(); fig.savefig(f"{out}/01_temas.png"); plt.close(fig)
 
 # 2. Matriz de prioridade
@@ -59,3 +60,24 @@ fig.suptitle("Acerto da IA dobrou na classificação por tema", x=0.02, ha="left
 ax.set_title("Concordância com a classificação humana em 20 reclamações novas (validação)", loc="left", color=MUT, fontsize=10, pad=10)
 fig.tight_layout(); fig.savefig(f"{out}/03_acerto_validacao.png"); plt.close(fig)
 print("ok")
+
+# 4. Comparação de versões e modelos (teste com 30 reclamações novas)
+if len(sys.argv) > 3:
+    c = pd.read_csv(sys.argv[3], encoding="utf-8-sig", index_col=0)
+    rot = []
+    for nome, row in c.iterrows():
+        custo = "custo já pago" if pd.isna(row["custo_por_1000"]) else f"US$ {row['custo_por_1000']:.2f} por mil".replace(".", ",")
+        rot.append(f"{nome}\n{custo}")
+    x = np.arange(len(c)); w = 0.34
+    fig, ax = plt.subplots(figsize=(8.6, 4.6), dpi=200)
+    for off, col, cor, nome in [(-w/2 - 0.01, "tema", BLUE, "Tema"), (w/2 + 0.01, "urgencia", ORANGE, "Urgência")]:
+        ax.bar(x + off, c[col], w, color=cor, label=nome)
+        for xi, v in zip(x + off, c[col]):
+            ax.text(xi, v + 0.02, f"{v:.0%}", ha="center", color=TXT, fontsize=11, fontweight="semibold")
+    ax.set_xticks(x, rot, fontsize=10); ax.set_ylim(0, 1)
+    ax.set_yticks([0, .25, .5, .75, 1], ["0%", "25%", "50%", "75%", "100%"])
+    ax.grid(axis="y", color="#e6e5e0", lw=0.8); ax.set_axisbelow(True); ax.tick_params(length=0, colors=TXT)
+    ax.legend(frameon=False, loc="upper left", fontsize=10, ncol=2)
+    fig.suptitle("Regras de negócio melhoraram mais que um modelo 8x mais caro", x=0.02, ha="left", fontsize=14, fontweight="semibold", color=TXT)
+    ax.set_title("Concordância com a classificação humana em 30 reclamações novas (conjunto de teste)", loc="left", color=MUT, fontsize=10, pad=10)
+    fig.tight_layout(); fig.savefig(f"{out}/04_comparacao_modelos.png"); plt.close(fig)
